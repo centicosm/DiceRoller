@@ -1,0 +1,11 @@
+PIC 16F88 PDIP
+10K 1/4 Watt Resistor
+10 1/4 Watt Resistor
+.33uF Capacitor
+.1uF Capacitor
+2 NTE3078 7-Segment LED
+LM340T5 (TO-220)
+9V Battery connector
+6.2mm cutout pushbutton switch (e.g. GPB024A05BB)
+12mm cutout pushbutton switch
+15mm Panel mount SPDT On-Off Switch (e.g. EG1201)
