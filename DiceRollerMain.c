@@ -5,6 +5,7 @@
 
 
 #include <xc.h>
+//#include <16F88.H>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -386,13 +387,23 @@ void Handle_Buttons(void) {
             _TimeOutCnt++;
             if (_TimeOutCnt >= 254) {
                 Set_Led1(NO_DIE);
-                Set_Led2(NO_DIE); 
+                Set_Led2(NO_DIE);
+                
+                // put the device to sleep to awake again on button press
+                INTCONbits.RBIF = 0;
+                INTCONbits.RBIE = 1;
+                
+                asm("sleep");
+                asm("nop");
+                                
+                INTCONbits.RBIE = 0;
+                
             }            
         }
     }
     
     //  The change dice type button was pressed
-    if (!PORTBbits.RB5) {
+    if (PORTAbits.RA5) {
         if (0 == (_LastButtons & BUTTON_TYPE_BUTTON)) {
             _DebounceCntDiceType++;
             if (_DebounceCntDiceType == 1200) {
@@ -410,20 +421,24 @@ void Handle_Buttons(void) {
     }
      
     // the roll dice button was pressed
-    if (PORTAbits.RA5) { 
-        if (0 == (_LastButtons & BUTTON_ROLL_BUTTON)) {
-            _DebounceRollDice++;
-            if (_DebounceRollDice == 1200) {
-                _LastButtons |= BUTTON_ROLL_BUTTON;    
-                _DebounceRollDice = 0;
-            }
-        }
-        else {
+    if (PORTBbits.RB5) { 
+      //  if (0 == (_LastButtons & BUTTON_ROLL_BUTTON)) {
+        //    _DebounceRollDice++;
+//            if (_DebounceRollDice == 1200) {
+  //              _LastButtons |= BUTTON_ROLL_BUTTON;    
+    //            _DebounceRollDice = 0;
+      //      }
+        //}
+        //else {
             Roll_Dice();
-        }
+        //}
     }
+    
+    // roll not pressed
     else {
-        if (_LastButtons & BUTTON_ROLL_BUTTON) {
+        
+        // if it was pressed before debounce
+        /*if ((_LastButtons & BUTTON_ROLL_BUTTON)) {
             _DebounceRollDice++;
             if (_DebounceRollDice == 1200) {
                 _LastButtons &= ~BUTTON_ROLL_BUTTON;
@@ -433,7 +448,7 @@ void Handle_Buttons(void) {
         }
         else {
             _DebounceRollDice = 0;
-        }
+        }*/
     }
 }
 
